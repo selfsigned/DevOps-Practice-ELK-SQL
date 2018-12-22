@@ -57,3 +57,35 @@ resource "aws_nat_gateway" "nat" {
   allocation_id = "${aws_eip.nat_eip.id}"
   subnet_id     = "${aws_subnet.public_subnet.id}"
 }
+
+resource "aws_route" "nat_route" {
+  route_table_id         = "${aws_route_table.nat_routetable.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = "${aws_nat_gateway.nat.id}"
+}
+
+# Private subnet
+
+resource "aws_subnet" "private_subnet" {
+  vpc_id     = "${aws_vpc.default.id}"
+  cidr_block = "${var.private_subnet_cidr}"
+
+  map_public_ip_on_launch = false
+
+  tags {
+    Name = "${var.env}-private_subnet"
+  }
+}
+
+resource "aws_route_table" "nat_routetable" {
+  vpc_id = "${aws_vpc.default.id}"
+
+  tags {
+    Name = "${var.env}-nat_routetable"
+  }
+}
+
+resource "aws_route_table_association" "private_subnet" {
+  subnet_id      = "${aws_subnet.private_subnet.id}"
+  route_table_id = "${aws_route_table.nat_routetable.id}"
+}

@@ -1,28 +1,28 @@
 resource "aws_instance" "bastion" {
-  ami             = "${lookup(var.ami_ubuntu_ebs, var.region)}"
-  instance_type   = "t2.micro"
-  key_name        = "${aws_key_pair.ssh.id}"
-  security_groups = ["${aws_security_group.bastion.id}"]
+  ami           = "${lookup(var.ami_ubuntu_ebs, var.region)}"
+  instance_type = "t2.nano"
+  key_name      = "${aws_key_pair.ssh.id}"
 
-  subnet_id = "${aws_subnet.public_subnet.id}"
+  subnet_id              = "${aws_subnet.public_subnet.id}"
+  vpc_security_group_ids = ["${aws_security_group.bastion.id}"]
+
+  //private_dns = "bastion"
 
   tags {
     Name = "${var.env}-bastion"
     side = "front"
   }
-
   connection {
     user        = "ubuntu"
     private_key = "${file(var.ssh_privkey_path)}"
   }
-
   depends_on = ["aws_security_group.bastion"]
 }
 
 resource "aws_security_group" "bastion" {
+  vpc_id      = "${aws_vpc.default.id}"
   name        = "${var.env}-secgroup-bastion"
   description = "SSH and private resource acces"
-  vpc_id      = "${aws_vpc.default.id}"
 
   ingress {
     from_port   = 22
