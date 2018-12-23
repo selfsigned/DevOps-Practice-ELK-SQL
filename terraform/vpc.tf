@@ -51,6 +51,10 @@ resource "aws_route_table_association" "public_subnet" {
 resource "aws_eip" "nat_eip" {
   count = 1
   vpc   = true
+
+  tags {
+    Name = "${var.env}-nat_eip"
+  }
 }
 
 resource "aws_nat_gateway" "nat" {

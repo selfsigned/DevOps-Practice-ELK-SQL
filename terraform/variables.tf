@@ -15,14 +15,6 @@ variable "ami_ubuntu_ebs" {
   }
 }
 
-variable "ami_ubuntu_instance" {
-  type = "map"
-
-  default = {
-    eu-west-3 = "ami-04789785492a9c823" #18.04 LTS
-  }
-}
-
 ### NETWORK ###
 
 variable "vpc_subnet_cidr" {
@@ -38,10 +30,15 @@ variable "private_subnet_cidr" {
 }
 
 ### SSH ###
-variable "ssh_pubkey_path" {
-  default = "~/.ssh/id_rsa.pub"
+
+# Change this to your ssh key path
+variable "ssh_privkey_path" {
+  default = "~/.ssh/id_rsa_alt"
 }
 
-variable "ssh_privkey_path" {
-  default = "~/.ssh/id_rsa"
+variable "ssh_pubkey_path" {
+  default = "~/.ssh/id_rsa_alt.pub"
 }
+
+### INSTANCES ###
+

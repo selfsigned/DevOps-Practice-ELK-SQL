@@ -27,23 +27,34 @@ A small lab to prepare for my DevOps internship.
 +-----------------------------------------------+-+----------------------+--+
 ```
 
-## VPC
 ### Subnets
+Subnet CIDR Block: `10.0.0.0/16`
 
 | Subnet     | Public        |
 |------------|---------------|
-| CIDR Block | 10.13.37.0/24 |
+| CIDR Block | `10.0.0.0/24` |
 | Hosts      | Bastion, App  |
 
-| Subnet     | Private     |
-|------------|-------------|
-| CIDR Block | 10.4.2.0/24 |
+| Subnet     | Private        |
+|------------|----------------|
+| CIDR Block | `10.0.42.0/24` |
 
+## Environment
+Ressource names are prefixed with `${var.env}`. default to __lab__
+
+## Provisioning
+Only the __bastion__ host is allowed to SSH to the other instances.
+
+- I'll look into using __packer__ with __ansible__ to build the AMI ahead of time for the DB instances
 
 # Setup
+
 ## Aws Credentials
 __aws_access_key_id__ and __aws_secret_access_key__
 #### With [Pass](https://www.passwordstore.org/)
 ```bash
 export $(pass AWS/non_root_ami_user_api_keys)
 ```
+
+## SSH
+Using `~/.ssh/id_rsa_alt` by default, change it in variables.tf
